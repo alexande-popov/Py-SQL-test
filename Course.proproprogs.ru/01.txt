@@ -1,0 +1,99 @@
+
+SQL (Structured Query Language)
+
+
+DB Browser for SQLite
+https://sqlitebrowser.org
+
+
+import sqlite3
+
+
+Простейшая заготовка для свзяи с базой данных saper.db.
+Если БД существует -- файл открывается.
+Если БД не существует -- файл создается.
+
+import sqlite3 as sq
+ 
+con = sq.connect("saper.db")
+cur = con.cursor()
+ 
+cur.execute("""
+""")
+ 
+con.close()
+
+
+connect("path/to/database.db"). У метода connect() есть и другие параметры, определяющие свойства подключения. 
+
+Расширения файлов:
+*.db, *.db3, *.sqlite и *.sqlite3
+
+
+сursor() создает объект курсор
+Курсор — поименованная область памяти, содержащая результирующий набор select запроса. 
+Второе определение — это механизм обработки результирующего набора select запроса.
+https://ru.wikipedia.org/wiki/%D0%9A%D1%83%D1%80%D1%81%D0%BE%D1%80_(%D0%B1%D0%B0%D0%B7%D1%8B_%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85)
+
+execute(...) выполняет SQL запрос. Аргумент -- строка запроса; возможен еще список или словарь параметров.
+executmany(...)
+executescript(...)
+
+Обязательно нужно закрывать соединения с БД!
+Или, еще лучше, оборачивать с помощью менеджера контекста with ... as.
+Это гарантирует, что критические функции выполнятся в любом случае. 
+
+with sq.connect("saper.db") as con:
+    cur = con.cursor()
+    cur.execute("""
+    """)
+
+
+Типы
+NULL 
+INTEGER – (занимает от 1 до 8 байт);
+REAL – вещественный тип (8 байт в формате IEEE);
+TEXT – строковый тип (в кодировке данных базы, обычно UTF-8);
+BLOB (двоичные данные, хранятся «как есть», например, для небольших изображений).
+
+В мануале пишут, что типы имен полей можно не указывать, спасибо flexible typing
+Column Datatype	  Types Allowed In That Column
+INTEGER	          INTEGER, REAL, TEXT, BLOB
+REAL	          REAL, TEXT, BLOB
+TEXT	          TEXT, BLOB
+BLOB	          INTEGER, REAL, TEXT, BLOB
+
+Без типизации
+cur.execute("CREATE TABLE users(name, sex, old, score)")
+
+
+С типизацией SQL-запрос
+cur.execute("""CREATE TABLE users (
+    name TEXT,
+    sex INTEGER,
+    old INTEGER,
+    score INTEGER
+)""")
+
+!!!!!
+Таблица создастся, но при повторной компиляции выдаст ошибку, что она уже создана, поэтому лучще добавить условие
+CREATE TABLE IF NOT EXISTS users ( ...)
+
+!!!!!
+Скрытое поле для каждой записи, индивидуальный идентификатор
+SELECT rowid, * FROM users
+или создать поле с ограничителями PRIMARY KEY AUTOINCREMENT
+user_id INTEGER PRIMARY KEY AUTOINCREMENT
+
+
+==== Удаление таблицы
+cur.execute("DROP TABLE users")
+
+=== ОГРАНИЧИТЕЛИ
+NOT NULL
+DEFAULT 1
+
+=== ФОРМАТ INSERT
+INSERT INTO <table_name> VALUES (<value1>, <value2>, …)
+INSERT INTO <table_name> (<column_name1>, <column_name2>, ...) VALUES (<value1>, <value2>, …)
+В первом случае данные перечисляются по порядку, так как не задан порядок в круглях скобках (полях).
