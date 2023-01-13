@@ -13,6 +13,7 @@ with sq.connect("saper.db") as con:
         score INTEGER
     )""")
 
+
     ## Fill the table
     row1_sql = "INSERT INTO users VALUES(1, 'Михаил', 1, 19, 1000)"
     cur.execute(row1_sql)
@@ -35,6 +36,18 @@ with sq.connect("saper.db") as con:
 
     # typing: old INTEGER = 'twenty'
     cur.execute("INSERT INTO users (name, sex, old, score) VALUES('Ольга', 2, 'twenty', 1200)")
+
+
+    ## Update
+    cur.execute("UPDATE users SET old = 20 WHERE rowid = 18")
+    cur.execute("UPDATE users SET score = score+7 WHERE name LIKE 'Григорий'")
+    cur.execute("UPDATE users SET score = score+50 WHERE name LIKE 'А%'")
+    cur.execute("UPDATE users SET score = score+60 WHERE name LIKE 'М_р%'")
+
+
+    # ## Delete
+    # cur.execute("DELETE FROM users WHERE rowid IN(3, 5)")  # only 3, 5
+
 
     ## Select
     select_sql = "SELECT * FROM users WHERE score >= 500 AND sex = 1 ORDER BY score ASC LIMIT 2, 3"
