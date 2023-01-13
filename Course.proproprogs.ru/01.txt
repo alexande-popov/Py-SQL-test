@@ -88,6 +88,7 @@ user_id INTEGER PRIMARY KEY AUTOINCREMENT
 
 ==== Удаление таблицы
 cur.execute("DROP TABLE users")
+cur.execute("DROP TABLE IF EXISTS users")
 
 === ОГРАНИЧИТЕЛИ
 NOT NULL
@@ -97,3 +98,80 @@ DEFAULT 1
 INSERT INTO <table_name> VALUES (<value1>, <value2>, …)
 INSERT INTO <table_name> (<column_name1>, <column_name2>, ...) VALUES (<value1>, <value2>, …)
 В первом случае данные перечисляются по порядку, так как не задан порядок в круглях скобках (полях).
+Примеры
+INSERT INTO users VALUES('Михаил', 1, 19, 1000)
+INSERT INTO users (name, old, score) VALUES('Алексей', 18, 1000)  -- поле sex пропущено, 
+  оно будет добавлено автоматически NULL по умолчанию DEFAULT
+
+
+=== ФОРМАТ INSERT
+SELECT col1, col2, … FROM <table_name>
+ELECT col1, col2, … FROM <table_name> WHERE <условие>
+Примеры
+SELECT * FROM users
+SELECT name, score FROM users
+SELECT * FROM users WHERE score < 100
+SELECT * FROM users WHERE old > 20 AND score < 1000
+SELECT * FROM users WHERE old IN(19, 32) AND score < 1000
+SELECT * FROM users WHERE old IN(19, 32) AND score > 300 OR sex = 1  -- равносильно (IN(19, 32) AND score > 300) OR sex = 1
+SELECT * FROM users WHERE (old IN(19, 32) OR sex = 1) AND score > 300
+
+Операторы не действуют друг за другом.
+Весь список сверху выдаст только результат от последнего селекта.
+
+Операторы сравнения:
+= или ==, >, <, >=, <=, !=, BETWEEN
+
+Ключевые слова для составных условий
+AND, OR, NOT, IN, NOT IN
+
+Приоритет операций (от сильного к слабому): NOT OR AND
+
+== Сортировка ORDER BY
+
+SELECT * FROM users WHERE old > 20 AND score < 1000 
+ORDER BY old
+
+или аналогично по возрастанию
+ORDER BY old ASC
+
+по убыванию
+ORDER BY old DESC
+
+
+=== LIMIT Ограничение выборки 
+LIMIT <max> [OFFSET offset]
+LIMIT <offset, max>
+
+SELECT * FROM users WHERE score > 100 ORDER BY score DESC LIMIT 5
+SELECT * FROM users WHERE score > 100 ORDER BY score DESC LIMIT 5 OFFSET 2   -- пропускаем первые две записи
+SELECT * FROM users WHERE score > 100 ORDER BY score DESC LIMIT 2, 5         -- то же самое
+
+
+=== fetchall()
+
+fetchall() - резльтат отбора SQL-запроса, выдает список кортежей. Можеь занять много памяти.
+
+result = cur.fetchall()
+print(result)
+
+или так, обрабатывая одну строчку и экономя память
+for result in cur:
+    print(result)
+
+fetchmany(n) -- список дляиной не более n
+fetchone() -- возвращает первую запись
+
+
+
+
+
+
+
+
+
+
+
+
+
+
