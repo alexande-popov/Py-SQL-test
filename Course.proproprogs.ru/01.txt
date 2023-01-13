@@ -104,9 +104,9 @@ INSERT INTO users (name, old, score) VALUES('Алексей', 18, 1000)  -- поле sex пр
   оно будет добавлено автоматически NULL по умолчанию DEFAULT
 
 
-=== ФОРМАТ INSERT
+=== ФОРМАТ SELECT
 SELECT col1, col2, … FROM <table_name>
-ELECT col1, col2, … FROM <table_name> WHERE <условие>
+SELECT col1, col2, … FROM <table_name> WHERE <условие>
 Примеры
 SELECT * FROM users
 SELECT name, score FROM users
@@ -161,6 +161,30 @@ for result in cur:
 
 fetchmany(n) -- список дляиной не более n
 fetchone() -- возвращает первую запись
+
+
+==== UPDATE
+UPDATE table_name SET column_name1 = new_value1 [, column_name2 = new_value2] [WHERE condition]
+
+Апдейт всего столбца
+UPDATE users SET score = 1000
+
+Апдейт с жестким условием
+UPDATE users SET old = 20 WHERE rowid = 18
+
+UPDATE users SET score = score+7 WHERE name LIKE 'Григорий'
+
+
+% - любое продолжение строки;
+_ - любой символ;
+UPDATE users SET score = score+50 WHERE name LIKE 'A%'     +50 если имя на А
+UPDATE users SET score = score+60 WHERE name LIKE 'М_р%'   +60 если Мария
+
+
+==== DELETE
+DELETE FROM table_name WHERE condition
+
+DELETE FROM users WHERE rowid IN(1, 6)
 
 
 
