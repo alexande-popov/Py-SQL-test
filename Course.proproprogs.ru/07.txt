@@ -1,0 +1,21 @@
+Оператор JOIN как бы создает сводный отчет.
+Оператор UNION Объединяет построчно. Объединяет только уникальные события логическим И.
+
+SELECT score, `from` FROM tab1
+UNION SELECT val, type FROM tab2
+Это выдаст все возможные комбинации score-`from` и val-type
+
+Такой вариант выдаст только уникальные значения для score и val
+SELECT score FROM tab1
+UNION SELECT val FROM tab2
+
+В первом варианте при объединении под единым полем можно собрать поля двух таблиц `from` и type.
+SELECT score, 'table 1' as tbl FROM tab1
+UNION SELECT val, 'table 2' FROM tab2
+
+
+Оператор UNION можно объединять с фильтрацией и сортировкой.
+SELECT score, 'table 1' as tbl FROM tab1 WHERE score IN(300, 400)
+UNION SELECT val, 'table 2' FROM tab2
+ORDER BY score DESC
+LIMIT 3
