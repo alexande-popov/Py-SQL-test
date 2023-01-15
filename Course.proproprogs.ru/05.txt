@@ -1,0 +1,43 @@
+
+Считаем в таблице games число игр у игрока 1
+SELECT count(user_id) FROM games WHERE user_id = 1
+
+Можно было бв использовать и count(score), и count(time), и даже count()
+
+Вместо неудобной переменной count(user_id) можно использовать синоним-алиас, например, count
+SELECT count(user_id) as count FROM games WHERE user_id = 1
+
+Сначала формируется выборка, т.е выполняется селект с условием, а в последний момент агрегируется.
+
+Агрегирующие функции:
+count() 
+sum()
+avr()
+min()
+max() 
+
+Число особых, определенных игроковЖ используем оператор DISTINCT
+SELECT count(DISTINCT user_id) as count FROM games
+
+Список уникальных игроков
+SELECT DISTINCT user_id as count FROM games
+
+Сумма очков первого игрока
+SELECT sum(score) as scores FROM games WHERE user_id=1
+
+
+==== GROUP BY
+
+    cur.execute("""
+    SELECT user_id, sum(score) as sum
+    FROM games 
+    GROUP BY user_id
+    ORDER BY sum ASC
+
+    SELECT user_id, sum(score) as sum
+    FROM games 
+    WHERE score > 300
+    GROUP BY user_id
+    ORDER BY sum DESC
+    LIMIT 2
+    """)
