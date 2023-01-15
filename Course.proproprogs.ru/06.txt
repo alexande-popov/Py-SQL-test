@@ -1,0 +1,43 @@
+СВОДНЫЕ ОТЧЕТЫ
+
+=== SELECT
+SELECT name, sex, games.score FROM users, games
+Каждому games.score приписывется рядом users.name, users.sex
+Это не то, что нужно, но иногда и такой вариант может возникнуть
+
+=== JOIN, INNER JOIN
+Формируем сводную таблицу на основании (главной) таблицы games.
+Поля в новой таблице: users.name, users.sex, games.score
+Связь таблиц будем осужествлять по games.user_id = users.rowid
+
+SELECT name, sex, games.score FROM games
+JOIN users ON games.user_id = users.rowid
+
+Этот пример соответсвует INNER JOIN, когда соответсвие между таблицами найдено.
+Т.е. JOIN == INNER JOIN
+
+Для примера удалим одного пользователя из users
+DELETE FROM users WHERE user_id = 3
+Теперь результат объединения не будет включать пользователя 3.
+SELECT name, sex, games.score FROM games
+INNER JOIN users ON games.user_id = users.rowid
+
+=== LEFT JOIN
+Если применить LEFT JOIN, строчки из основной таблицы останутся, но не поддянется информация из правой таблицы
+SELECT name, sex, games.score FROM games
+LEFT JOIN users ON games.user_id = users.rowid
+Резултат: будут строчки вида 
+(None, None, 100)
+
+=== С группировкой
+        SELECT name, max(games.score) as best FROM games
+        JOIN users ON games.user_id = users.rowid
+        GROUP BY name
+        ORDER BY best DESC
+
+=== Несколько таблиц
+SELECT <field1, field2, ...> FROM <t1>
+JOIN <t2> JOIN <t3> JOIN ...
+ON <conditions>
+
+
