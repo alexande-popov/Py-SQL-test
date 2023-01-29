@@ -1,0 +1,30 @@
+Вложенные SQL-запросы
+
+Лучше стараться избегать вложенные запросы, так как они дополнительно обращаются к БД и тратят вычислительную мощность.
+
+
+Пример для SELECT
+Выбрать студентов, оценка которох по Си выше, чем у Маши.
+SELECT name, subject, mark FROM marks
+JOIN students ON students.rowid = marks.id
+WHERE mark > (SELECT mark FROM marks
+WHERE id = 2 AND subject LIKE 'Си')
+AND subject LIKE 'Си'
+
+
+Пример для INSERT
+INSERT INTO females SELECT * FROM students WHERE sex = 2
+
+
+Пример для UPDATE
+бнулим те оценки, которые не лучше, чем худшая у оценка у id = 1
+UPDATE marks SET mark = 0
+WHERE mark <= (SELECT min(mark) FROM marks WHERE id = 1)
+
+
+Пример для DELETE
+Удалим студентов, которые младше Маши
+DELETE FROM students
+WHERE old < (SELECT old FROM students WHERE id = 2)
+
+
